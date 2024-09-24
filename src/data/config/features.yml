@@ -1,0 +1,16 @@
+cast_features:
+  int32:
+    - vendor_id
+    - passenger_count
+    - year_month_day
+    - max_temperature_normal_f
+    - min_temperature_normal_f
+    - avg_temperature_normal_f
+  float32:
+    - pickup_longitude
+    - pickup_latitude
+    - dropoff_longitude
+    - dropoff_latitude
+    - daily_preciptation_normal_inches
+  datetime[64]:
+    - pickup_datetime

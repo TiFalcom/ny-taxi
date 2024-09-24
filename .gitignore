@@ -1,6 +1,9 @@
 # Data
 *.csv
 *.zip
+*.log
+*.parquet.gzip
+*.parquet
 
 /venv_ny_taxi/
 

@@ -31,13 +31,47 @@ Data cleaning, executed on notebook.
 
 [01-Data-Basic-Process.ipynb](notebooks/01-Data-Basic-Process.ipynb)
 
+# 2.Feature Engineering
+Try to use kmeans to split lat/long into districts.
+Try to use knowledge base to split lat/long into districts.
+Transform features for different scale (log, sqrt, exp).
 
+
+# 3.Split Data
+Split train, test and validation datasets (avoid leak)
+
+# 4.Feature Selection (?)
+Reduce dimensionality and variance
+
+# 5.Encoding (?)
+Categorical encoding and features normalization
+
+# 7.Tunning (?)
+Tune params/hyperparams/architectures
+
+# 8.Train Model (?)
+ARIMA  
+SARIMAX - Seasonal  
+Boosting - XGBoost/LightGBM  
+Logistic Regression  
+Linear Regression  
+Basic MLP  
+LSTM  
+
+# 9.Register Experiment (mlflow?)
+Use a framework to register experiments (maybe a folder structure)
+
+# 10.Results
+Compare results between techniques
+
+
+## Project Organization
 
 <a target="_blank" href="https://cookiecutter-data-science.drivendata.org/">
     <img src="https://img.shields.io/badge/CCDS-Project%20template-328F97?logo=cookiecutter" />
 </a>
 
-## Project Organization
+
 
 ```
 ├── LICENSE            <- Open-source license if one is chosen
