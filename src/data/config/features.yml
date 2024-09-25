@@ -14,3 +14,5 @@ cast_features:
     - daily_preciptation_normal_inches
   datetime[64]:
     - pickup_datetime
+
+temporal_feature: pickup_datetime

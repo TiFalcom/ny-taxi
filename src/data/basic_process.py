@@ -16,7 +16,7 @@ def main(config_file, dataset_name):
     logger = logging.getLogger('Basic-Process')
     
     logger.info(f'Loading {dataset_name} dataset.')
-    df = pd.read_csv(os.path.join('data', 'raw', f'{dataset_name}.csv'))
+    df = pd.read_parquet(os.path.join('data', 'raw', f'{dataset_name}.parquet.gzip'))
     logger.info(f'Shape {dataset_name}: {df.shape}')
 
     logger.info(f'Loading weather dataset.')
@@ -58,7 +58,7 @@ def main(config_file, dataset_name):
 
     logger.info('Saving dataset on data/interim')
     df_interim.to_parquet(
-        os.path.join('data', 'interim', f'interim_{dataset_name}.parquet.gzip'),
+        os.path.join('data', 'interim', f'{dataset_name}.parquet.gzip'),
         compression='gzip',
         index=False
     )

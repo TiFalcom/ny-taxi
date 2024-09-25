@@ -27,18 +27,31 @@ Getting exogenous data that can help prediction.
 [00-Exogenous-Data-Capture.ipynb](notebooks/00-Exogenous-Data-Capture.ipynb)
 
 # 1.Data Basic Process
-Data cleaning, executed on notebook.
+Cleaning data, removing data points out of NYC bounds [long - (-74.03, -73.75), lat - (40.63, 40.85)], merging travels with weather information, fixing features to the right type.
 
 [01-Data-Basic-Process.ipynb](notebooks/01-Data-Basic-Process.ipynb)
 
-# 2.Feature Engineering
-Try to use kmeans to split lat/long into districts.
-Try to use knowledge base to split lat/long into districts.
-Transform features for different scale (log, sqrt, exp).
+```bash
+python src/data/basic_process.py --config_file=features --dataset_name=full
+```
 
+# 2.Split Data
+Split train, test and validation datasets to avoid leak on feature engineering. Using [20160101, 20160601) for training, with 10% of out-of-sample for validation, and [20160601, 20160701) for test.
 
-# 3.Split Data
-Split train, test and validation datasets (avoid leak)
+```bash
+python src/data/split_train_test.py --dataset_name=full --ymd_train=20160101 --ymd_test=20160601
+```
+
+# 3.Feature Engineering
+Used Latitude and Longitude of pickup and drop to cluster locations with Kmeans, after testing different values for K, i've choosed k=6 mainly because of the silhouette coefficient.  
+![K](reports/figures/kmeans.png)
+An then we have 6 clusters distributed along NYC.  
+![Clusters](reports/figures/geographic_kmeans_clusters.png)
+
+Try to use knowledge base to split lat/long into districts.  
+Condense analytical features to daily features.  
+Transform features for different scale (log, sqrt, exp).  
+
 
 # 4.Feature Selection (?)
 Reduce dimensionality and variance
