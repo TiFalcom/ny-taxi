@@ -23,7 +23,13 @@ def main(config_file, dataset_name):
     df_weather = pd.read_csv(os.path.join('data', 'external', 'weather_unify.csv'))
     logger.info(f'Shape weather: {df_weather.shape}')
 
+    logger.info(f'Loading data-points dataset.')
+    df_point = pd.read_parquet('data/external/Centerline_unify.parquet.gzip')
+    logger.info(f'Shape point: {df_point.shape}')
+
     logger.info(f'Merging datasets.')
+
+    # Weather
     df['year_month_day'] = df['pickup_datetime'].astype(str).str[0:10].str.replace('-', '')
 
     df_weather['year_month_day'] = df_weather['Year'].astype(str) + df_weather['Month'].astype(str).str.zfill(2) + df_weather['Day'].astype(str).str.zfill(2)
@@ -32,6 +38,15 @@ def main(config_file, dataset_name):
                                   'max_temperature_normal_f', 'min_temperature_normal_f',
                                   'avg_temperature_normal_f']], on='year_month_day', how='left')
     
+    # Lat Long
+    df_interim['lat_long'] = df_interim['pickup_longitude'].round(2).astype(str) + '_' + df_interim['pickup_latitude'].round(2).astype(str)
+
+    df_point['lat_long'] = df_point['latitude'].round(2).astype(str) + '_' + df_point['longitude'].round(2).astype(str)
+
+    df_point = df_point.drop_duplicates(subset=['lat_long'])
+
+    df_interim = df_interim.merge(df_point, on='lat_long', how='left')
+
     logger.info(f'Datasets merged. Shape: {df_interim.shape}')
 
     logger.info(f'Removing travels from outside of NYC and non used columns.')
@@ -46,6 +61,12 @@ def main(config_file, dataset_name):
 
     if 'dropoff_datetime' in df_interim.columns:
         df_interim = df_interim.drop(columns=['dropoff_datetime', 'trip_duration'])
+
+    df_interim = df_interim.drop(columns=['lat_long', 'latitude', 'CREATED', 'MODIFIED', 'FULL_STREE', 'ST_NAME',
+                                          'longitude', 'PHYSICALID', 'L_LOW_HN', 'L_HIGH_HN', 'R_LOW_HN',
+                                          'R_HIGH_HN', 'L_ZIP', 'R_ZIP', 'L_BLKFC_ID', 'R_BLKFC_ID', 'ST_LABEL',
+                                          'STATUS', 'FRM_LVL_CO', 'TO_LVL_CO', 'SHAPE_Leng'])
+        
     logger.info(f'Cleaning complete. Shape: {df_interim.shape}.')
 
     logger.info(f'Fixing features with correct types.')

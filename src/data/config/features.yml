@@ -16,3 +16,12 @@ cast_features:
     - pickup_datetime
 
 temporal_feature: pickup_datetime
+
+hard_remove:
+  - id
+  - pickup_datetime
+  - pickup_longitude
+  - pickup_latitude
+  - dropoff_longitude
+  - dropoff_latitude
+  - year_month_day

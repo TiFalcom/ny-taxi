@@ -22,12 +22,18 @@ kaggle competitions download -c nyc-taxi-trip-duration -p data/raw
 ```
 
 # 0.Exogenous Data Capture
-Getting exogenous data that can help prediction.
+Getting exogenous data that can help prediction.  
 
+Three datasets were used to get exogenous data:  
+- [Weather Data from NYC Central Park](https://www.weather.gov/wrh/Climate?wfo=okx)  
+- [NYC Street Centerline](https://data.cityofnewyork.us/City-Government/NYC-Street-Centerline-CSCL-/exjm-f27b)  
+- [NYC Address Point](https://data.cityofnewyork.us/City-Government/NYC-Address-Points/g6pj-hd8k) - Not used
+
+To treat the data access the code bellow.  
 [00-Exogenous-Data-Capture.ipynb](notebooks/00-Exogenous-Data-Capture.ipynb)
 
 # 1.Data Basic Process
-Cleaning data, removing data points out of NYC bounds [long - (-74.03, -73.75), lat - (40.63, 40.85)], merging travels with weather information, fixing features to the right type.
+Cleaning data, removing data points out of NYC bounds [long - (-74.03, -73.75), lat - (40.63, 40.85)], merging travels with weather information and data point knowledge base, fixing features to the right type.
 
 [01-Data-Basic-Process.ipynb](notebooks/01-Data-Basic-Process.ipynb)
 
@@ -48,16 +54,19 @@ Used Latitude and Longitude of pickup and drop to cluster locations with Kmeans,
 An then we have 6 clusters distributed along NYC.  
 ![Clusters](reports/figures/geographic_kmeans_clusters.png)
 
-Try to use knowledge base to split lat/long into districts.  
+# 4.Encoding
+Categorical encoding
+
+# 5.Condensing Features
 Condense analytical features to daily features.  
+
+
+# 6.Normalization
 Transform features for different scale (log, sqrt, exp).  
 
-
-# 4.Feature Selection (?)
+# 6.Feature Selection (?)
 Reduce dimensionality and variance
 
-# 5.Encoding (?)
-Categorical encoding and features normalization
 
 # 7.Tunning (?)
 Tune params/hyperparams/architectures
