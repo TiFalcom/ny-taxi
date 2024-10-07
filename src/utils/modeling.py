@@ -14,3 +14,10 @@ def get_features_type(X, n_categories, features_to_remove):
             features['numerical'].append(column)
 
     return features['categorical'], features['numerical']
+
+def apply_encoders(X, encoders):
+
+    for encoder in encoders:
+        X = encoder.transform(X)
+
+    return X

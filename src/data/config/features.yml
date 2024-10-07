@@ -40,3 +40,6 @@ hard_remove:
   - dropoff_longitude
   - dropoff_latitude
   - year_month_day
+
+target:
+  - qty_travels

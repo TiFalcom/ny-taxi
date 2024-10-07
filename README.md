@@ -74,12 +74,16 @@ And to encode dataset and save a checkpoint, run this:
 python src/features/create_encoded_features.py --dataset_preffix=full
 ```
 
-# 5.Condensing Features
+# 5.Aggregate Features
 Condense analytical features to daily features.  
 
 
+```bash
+python src/features/create_groupby_features.py --dataset_preffix=full
+```
+
 # 6.Normalization
-Transform features for different scale (log, sqrt, exp).  
+Transform features for different scale (log, sqrt, exp). And scale 0-1 for linear models.  
 
 # 6.Feature Selection (?)
 Reduce dimensionality and variance
