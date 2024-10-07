@@ -49,13 +49,30 @@ python src/data/split_train_test.py --dataset_name=full --ymd_train=20160101 --y
 ```
 
 # 3.Feature Engineering
-Used Latitude and Longitude of pickup and drop to cluster locations with Kmeans, after testing different values for K, i've choosed k=6 mainly because of the silhouette coefficient.  
+Used Latitude and Longitude of pickup and drop to cluster locations with Kmeans. After testing different values for K, i've choosed k=6 mainly because of the silhouette coefficient.  
 ![K](reports/figures/kmeans.png)
 An then we have 6 clusters distributed along NYC.  
 ![Clusters](reports/figures/geographic_kmeans_clusters.png)
 
+Other features were created using pickupdate.  
+To execute this part, run the code bellow.  
+
+```bash
+python src/features/create_features.py --dataset_preffix=full
+```
+
 # 4.Encoding
-Categorical encoding
+Categorical encoding, applied  to features with more than 15 categories.  
+
+To create the encoders run this script:  
+```bash
+python src/features/create_encoders.py --dataset_preffix=full
+```
+
+And to encode dataset and save a checkpoint, run this:  
+```bash
+python src/features/create_encoded_features.py --dataset_preffix=full
+```
 
 # 5.Condensing Features
 Condense analytical features to daily features.  

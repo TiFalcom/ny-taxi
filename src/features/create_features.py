@@ -6,6 +6,7 @@ import os
 import yaml
 import pickle
 from sklearn.cluster import KMeans
+from src.utils.transformers import FeatureEngineering
 
 
 @click.command()
@@ -33,14 +34,15 @@ def main(dataset_preffix):
     # TODO: Remove from this file, need to transfer to a specific script
     kmeans = KMeans(n_clusters=6, random_state=777, algorithm='lloyd').fit(loc_df)
 
+    create_features = FeatureEngineering(kmeans)
+
     for table in ['train', 'test', 'valid']:
         logger.info(f'Loading {dataset_preffix} {table} dataset.')
         df = pd.read_parquet(os.path.join('data', 'train_test', f'{dataset_preffix}_{table}.parquet.gzip'))
         logger.info(f'Shape {dataset_preffix} {table}: {df.shape}')
 
-        df['pickup_cluster'] = kmeans.predict(df[['pickup_longitude','pickup_latitude']].values)
-        df['dropoff_cluster'] = kmeans.predict(df[['dropoff_longitude','dropoff_latitude']].values)
-
+        logger.info(f'Starting Feature Engineering')
+        df = create_features.transform(df)
         logger.info(f'Feature Enginerring Completed! Shape: {df.shape}')
 
         logger.info('Saving dataset on data/processed')

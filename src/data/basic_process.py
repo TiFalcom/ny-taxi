@@ -5,7 +5,7 @@ import click
 import os
 import yaml
 
-from src.utils.transformers import FixFeatures
+from src.utils.transformers import FixFeaturesType, FixFeaturesMissing
 
 
 @click.command()
@@ -62,19 +62,29 @@ def main(config_file, dataset_name):
     if 'dropoff_datetime' in df_interim.columns:
         df_interim = df_interim.drop(columns=['dropoff_datetime', 'trip_duration'])
 
+    # TODO: Add this features on src/data/config/features.yml
     df_interim = df_interim.drop(columns=['lat_long', 'latitude', 'CREATED', 'MODIFIED', 'FULL_STREE', 'ST_NAME',
                                           'longitude', 'PHYSICALID', 'L_LOW_HN', 'L_HIGH_HN', 'R_LOW_HN',
                                           'R_HIGH_HN', 'L_ZIP', 'R_ZIP', 'L_BLKFC_ID', 'R_BLKFC_ID', 'ST_LABEL',
-                                          'STATUS', 'FRM_LVL_CO', 'TO_LVL_CO', 'SHAPE_Leng'])
+                                          'STATUS', 'FRM_LVL_CO', 'TO_LVL_CO', 'SHAPE_Leng', 'PRE_MODIFI', 'POST_MODIF',
+                                          'POST_DIREC'])
         
     logger.info(f'Cleaning complete. Shape: {df_interim.shape}.')
 
     logger.info(f'Fixing features with correct types.')
     cast_features = yaml.safe_load(open(os.path.join('src', 'data', 'config', f'{config_file}.yml'), 'r'))['cast_features']
 
-    fix_vars = FixFeatures(cast_features)
+    fix_features_type = FixFeaturesType(cast_features)
 
-    df_interim = fix_vars.transform(df_interim)
+    df_interim = fix_features_type.transform(df_interim)
+    logger.info(f'Fix completed. Shape: {df_interim.shape}')
+
+    logger.info(f'Fixing features with missing values.')
+    missing_features = yaml.safe_load(open(os.path.join('src', 'data', 'config', f'{config_file}.yml'), 'r'))['missing_features']
+
+    fix_features_missing = FixFeaturesMissing(missing_features)
+
+    df_interim = fix_features_missing.transform(df_interim)
     logger.info(f'Fix completed. Shape: {df_interim.shape}')
 
     logger.info('Saving dataset on data/interim')

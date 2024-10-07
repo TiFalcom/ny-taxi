@@ -1,11 +1,7 @@
 import pandas as pd
-import numpy as np
 import logging
 import click
 import os
-import yaml
-
-from src.utils.transformers import FixFeatures
 
 
 @click.command()
