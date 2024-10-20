@@ -21,7 +21,7 @@ def main(dataset_name_train, dataset_name_test):
 
     logger.info(f'Merging datasets.')
 
-    df = pd.concat([df, df_test], ignore_index=True).reset_index(drop=True)
+    df = pd.concat([df, df_test], ignore_index=True)#.reset_index(drop=True)
 
     logger.info('Saving dataset on data/interim')
     df.to_parquet(

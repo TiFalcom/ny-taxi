@@ -41,20 +41,16 @@ Cleaning data, removing data points out of NYC bounds [long - (-74.03, -73.75), 
 python src/data/basic_process.py --config_file=features --dataset_name=full
 ```
 
+
 # 2.Split Data
-Split train, test and validation datasets to avoid leak on feature engineering. Using [20160101, 20160601) for training, with 10% of out-of-sample for validation, and [20160601, 20160701) for test.
+Split train, test and validation datasets to avoid leak on feature engineering. Using [20240101, 20240131) for training, with 10% of out-of-sample for validation, and [20240201, 20160229) for test.
 
 ```bash
-python src/data/split_train_test.py --dataset_name=full --ymd_train=20160101 --ymd_test=20160601
+python src/data/split_train_test.py --dataset_name=full --ymd_train=20240101 --ymd_test=20240201
 ```
 
 # 3.Feature Engineering
-Used Latitude and Longitude of pickup and drop to cluster locations with Kmeans. After testing different values for K, i've choosed k=6 mainly because of the silhouette coefficient.  
-![K](reports/figures/kmeans.png)
-An then we have 6 clusters distributed along NYC.  
-![Clusters](reports/figures/geographic_kmeans_clusters.png)
-
-Other features were created using pickupdate.  
+Features were created using pickupdate.  
 To execute this part, run the code bellow.  
 
 ```bash
@@ -62,7 +58,7 @@ python src/features/create_features.py --dataset_preffix=full
 ```
 
 # 4.Encoding
-Categorical encoding, applied  to features with more than 15 categories.  
+Categorical encoding, applied  to features with less than 15 categories.  
 
 To create the encoders run this script:  
 ```bash
@@ -71,7 +67,7 @@ python src/features/create_encoders.py --dataset_preffix=full
 
 And to encode dataset and save a checkpoint, run this:  
 ```bash
-python src/features/create_encoded_features.py --dataset_preffix=full
+python src/features/create_encoded_features.py --dataset_preffix=full --encoder_type=2
 ```
 
 # 5.Aggregate Features

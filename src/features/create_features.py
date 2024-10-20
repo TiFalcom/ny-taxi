@@ -14,27 +14,8 @@ from src.utils.transformers import FeatureEngineering
 def main(dataset_preffix):
 
     logger = logging.getLogger('Feature-Engineering')
-    
-    logger.info(f'Training K-means with valid dataset.')
 
-    logger.info(f'Loading {dataset_preffix} valid dataset.')
-    df = pd.read_parquet(os.path.join('data', 'train_test', f'{dataset_preffix}_valid.parquet.gzip'))
-    logger.info(f'Shape {dataset_preffix} valid: {df.shape}')
-
-    longitude = list(df['pickup_longitude']) + list(df['dropoff_longitude'])
-    latitude = list(df['pickup_latitude']) + list(df['dropoff_latitude'])
-
-    loc_df = pd.DataFrame()
-    loc_df['longitude'] = longitude
-    loc_df['latitude'] = latitude
-
-    loc_df = loc_df.astype(np.float32).values
-
-    # Defined with experiments
-    # TODO: Remove from this file, need to transfer to a specific script
-    kmeans = KMeans(n_clusters=6, random_state=777, algorithm='lloyd').fit(loc_df)
-
-    create_features = FeatureEngineering(kmeans)
+    create_features = FeatureEngineering()
 
     for table in ['train', 'test', 'valid']:
         logger.info(f'Loading {dataset_preffix} {table} dataset.')
@@ -52,10 +33,6 @@ def main(dataset_preffix):
             index=False
         )
         logger.info('Saved!')
-
-    logger.info('Saving K-means artifact!')
-
-    pickle.dump(kmeans, open(os.path.join('models', 'encoders', 'kmeans.pkl'), 'wb'))
 
     logger.info('Success!')
 

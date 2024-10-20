@@ -45,8 +45,8 @@ def main(config_file, dataset_preffix):
                              ignore_format=True).fit(df)
 
     # One Hot Encoder
-    one_encoder = OneHotEncoder(drop_last=True, 
-                            drop_last_binary=True,
+    one_encoder = OneHotEncoder(#drop_last=True, 
+                            #drop_last_binary=True,
                             variables=categorical_features,
                             ignore_format=True).fit(df)
     

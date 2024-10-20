@@ -1,37 +1,38 @@
 cast_features:
-  int32:
-    - vendor_id
-    - passenger_count
-    - year_month_day
-    - max_temperature_normal_f
-    - min_temperature_normal_f
-    - avg_temperature_normal_f
-  float32:
-    - pickup_longitude
-    - pickup_latitude
-    - dropoff_longitude
-    - dropoff_latitude
-    - daily_preciptation_normal_inches
-    - ST_WIDTH
-  datetime[64]:
-    - pickup_datetime
+  #int32:
+  #  - None
+  #float64:
+  #  - None
+  #datetime[64]:
+  #  - None
 
 missing_features:
   NULL_VALUE:
-    - BIKE_LANE
-    - BOROCODE
-    - TRAFDIR
-    - RW_TYPE
-    - SNOW_PRI
-    - PRE_DIRECT
-    - PRE_TYPE
-    - POST_TYPE
-    - BIKE_TRAFD
-    - SEGMENT_TY
+    - store_and_fwd_flag
+    - service_zone_DO
+    - Zone_DO
+    - Borough_DO
+    - service_zone_PU
+    - Zone_PU
+    - Borough_PU
   -1:
-    - ST_WIDTH
+    - passenger_count
+    - RatecodeID
+  0:
+    - congestion_surcharge
+    - Airport_fee
+  41:
+    - Maximum
+  28:
+    - Minimum
+  35:
+    - Average
+  '0':
+    - Precipitation
+    - new_snow
+    - snow_depth
 
-temporal_feature: pickup_datetime
+temporal_feature: tpep_pickup_datetime
 
 hard_remove:
   - id

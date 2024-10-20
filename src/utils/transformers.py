@@ -66,8 +66,8 @@ class FixFeaturesType():
 class FeatureEngineering():
     """Class to create new features based on existing ones
     """
-    def __init__(self, kmeans_predictor):
-        self.kmeans_predictor = kmeans_predictor
+    def __init__(self):
+        pass
 
     def fit(self, X, y=None):
         return self
@@ -76,9 +76,9 @@ class FeatureEngineering():
         X = X.reset_index(drop=True)
         X_tmp = X.reset_index(drop=True)
 
-        X_tmp['day_of_week'] = X_tmp['pickup_datetime'].dt.weekday
+        X_tmp['day_of_week'] = X_tmp['tpep_pickup_datetime'].dt.weekday
 
-        X_tmp['hour_of_day'] = X_tmp['pickup_datetime'].dt.hour
+        X_tmp['hour_of_day'] = X_tmp['tpep_pickup_datetime'].dt.hour
 
         X_tmp['period_of_day'] = X_tmp['hour_of_day'].apply(get_period_of_day)
 
@@ -86,21 +86,9 @@ class FeatureEngineering():
         X_tmp = X.merge(X_tmp[new_columns], left_index=True, right_index=True, how='left')
         
         return X_tmp
-    
-    def create_model_features(self, X):
-        X = X.reset_index(drop=True)
-        X_tmp = X.reset_index(drop=True)
-
-        X_tmp['pickup_cluster'] = self.kmeans_predictor.predict(X_tmp[['pickup_longitude','pickup_latitude']].values)
-        X_tmp['dropoff_cluster'] = self.kmeans_predictor.predict(X_tmp[['dropoff_longitude','dropoff_latitude']].values)
-
-        new_columns = [col for col in X_tmp.columns if col not in X.columns]
-        X_tmp = X.merge(X_tmp[new_columns], left_index=True, right_index=True , how='left')
-        
-        return X_tmp
 
     def transform(self, X):
-        return self.create_model_features(self.create_payload_features(X))
+        return self.create_payload_features(X)
     
     def fit_transform(self, X, y=None):
         self.fit(X, y)
