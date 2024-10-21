@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+from datetime import datetime
 
 
 def get_period_of_day(hour):
@@ -81,6 +82,8 @@ class FeatureEngineering():
         X_tmp['hour_of_day'] = X_tmp['tpep_pickup_datetime'].dt.hour
 
         X_tmp['period_of_day'] = X_tmp['hour_of_day'].apply(get_period_of_day)
+
+        X_tmp['year_month_day'] = X_tmp['tpep_pickup_datetime'].apply(lambda x:datetime.strftime(x, '%Y%m%d')).astype(int)
 
         new_columns = [col for col in X_tmp.columns if col not in X.columns]
         X_tmp = X.merge(X_tmp[new_columns], left_index=True, right_index=True, how='left')

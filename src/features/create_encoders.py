@@ -11,14 +11,14 @@ from src.utils.modeling import get_features_type
 
 @click.command()
 @click.option('--config_file', default='features', type=str, help='Features configuration file on src/data/config.')
-@click.option('--dataset_preffix', default=None, type=str, help='Data set name on data/raw.')
-def main(config_file, dataset_preffix):
+@click.option('--dataset_prefix', default=None, type=str, help='Data set name on data/raw.')
+def main(config_file, dataset_prefix):
 
     logger = logging.getLogger('Create-Encoders')
 
-    logger.info(f'Loading {dataset_preffix} train dataset.')
-    df = pd.read_parquet(os.path.join('data', 'processed', f'{dataset_preffix}_train.parquet.gzip'))
-    logger.info(f'Shape {dataset_preffix} train: {df.shape}')
+    logger.info(f'Loading {dataset_prefix} train dataset.')
+    df = pd.read_parquet(os.path.join('data', 'processed', f'{dataset_prefix}_train.parquet.gzip'))
+    logger.info(f'Shape {dataset_prefix} train: {df.shape}')
 
     logger.info(f'Loading config file {config_file}')
 
@@ -36,6 +36,7 @@ def main(config_file, dataset_preffix):
     # Feature Selection
     selector = Selector(features_selected)
 
+    # TODO: fix this on encoding data script
     df = selector.transform(df)
 
     # Ordinal Encoder

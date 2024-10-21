@@ -10,17 +10,17 @@ from src.utils.transformers import FeatureEngineering
 
 
 @click.command()
-@click.option('--dataset_preffix', default=None, type=str, help='Data set name on data/raw.')
-def main(dataset_preffix):
+@click.option('--dataset_prefix', default=None, type=str, help='Data set name on data/raw.')
+def main(dataset_prefix):
 
     logger = logging.getLogger('Feature-Engineering')
 
     create_features = FeatureEngineering()
 
     for table in ['train', 'test', 'valid']:
-        logger.info(f'Loading {dataset_preffix} {table} dataset.')
-        df = pd.read_parquet(os.path.join('data', 'train_test', f'{dataset_preffix}_{table}.parquet.gzip'))
-        logger.info(f'Shape {dataset_preffix} {table}: {df.shape}')
+        logger.info(f'Loading {dataset_prefix} {table} dataset.')
+        df = pd.read_parquet(os.path.join('data', 'train_test', f'{dataset_prefix}_{table}.parquet.gzip'))
+        logger.info(f'Shape {dataset_prefix} {table}: {df.shape}')
 
         logger.info(f'Starting Feature Engineering')
         df = create_features.transform(df)
@@ -28,7 +28,7 @@ def main(dataset_preffix):
 
         logger.info('Saving dataset on data/processed')
         df.to_parquet(
-            os.path.join('data', 'processed', f'{dataset_preffix}_{table}.parquet.gzip'),
+            os.path.join('data', 'processed', f'{dataset_prefix}_{table}.parquet.gzip'),
             compression='gzip',
             index=False
         )

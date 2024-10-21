@@ -43,10 +43,10 @@ python src/data/basic_process.py --config_file=features --dataset_name=full
 
 
 # 2.Split Data
-Split train, test and validation datasets to avoid leak on feature engineering. Using [20240101, 20240131) for training, with 10% of out-of-sample for validation, and [20240201, 20160229) for test.
+Split train, test and validation datasets to avoid leak on feature engineering. Using [20240101, 20240131) for training, [20240201, 20240207] for validation, and [20240201, 20160229) for test.
 
 ```bash
-python src/data/split_train_test.py --dataset_name=full --ymd_train=20240101 --ymd_test=20240201
+python src/data/split_train_test.py --dataset_name=full --ymd_train=20240101 --ymd_valid=20240201 --ymd_test=20240208
 ```
 
 # 3.Feature Engineering
@@ -54,7 +54,7 @@ Features were created using pickupdate.
 To execute this part, run the code bellow.  
 
 ```bash
-python src/features/create_features.py --dataset_preffix=full
+python src/features/create_features.py --dataset_prefix=full
 ```
 
 # 4.Encoding
@@ -62,12 +62,12 @@ Categorical encoding, applied  to features with less than 15 categories.
 
 To create the encoders run this script:  
 ```bash
-python src/features/create_encoders.py --dataset_preffix=full
+python src/features/create_encoders.py --dataset_prefix=full
 ```
 
 And to encode dataset and save a checkpoint, run this:  
 ```bash
-python src/features/create_encoded_features.py --dataset_preffix=full --encoder_type=2
+python src/features/create_encoded_features.py --dataset_prefix=full --encoder_type=2
 ```
 
 # 5.Aggregate Features
@@ -75,11 +75,20 @@ Condense analytical features to daily features.
 
 
 ```bash
-python src/features/create_groupby_features.py --dataset_preffix=full
+python src/features/create_groupby_features.py --dataset_prefix=full
 ```
 
-# 6.Normalization
-Transform features for different scale (log, sqrt, exp). And scale 0-1 for linear models.  
+# 6.Scale Data
+Transform features for different scale (log, sqrt, exp). And scale 0-1 for linear models.
+
+```bash
+python src/features/create_scalers.py --dataset_prefix=full
+```
+
+And to scale dataset and save a checkpoint, run this:  
+```bash
+python src/features/create_scaled_features.py --dataset_prefix=full
+```
 
 # 6.Feature Selection (?)
 Reduce dimensionality and variance

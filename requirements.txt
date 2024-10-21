@@ -39,6 +39,7 @@ jupyter_client==8.6.3
 jupyter_core==5.7.2
 kaggle==1.6.17
 kiwisolver==1.4.7
+lightgbm==4.5.0
 Markdown==3.7
 markdown-it-py==3.0.0
 MarkupSafe==2.1.5
@@ -89,7 +90,6 @@ scikit-learn==1.5.2
 scipy==1.14.1
 shapely==2.0.6
 six==1.16.0
--e git+https://github.com/TiFalcom/ny-taxi.git@2d086335b44a29dba9fabe24803e3a1e202ee43f#egg=src
 stack-data==0.6.3
 statsmodels==0.14.3
 text-unidecode==1.3

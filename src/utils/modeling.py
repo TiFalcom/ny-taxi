@@ -21,3 +21,9 @@ def apply_encoders(X, encoders):
         X = encoder.transform(X)
 
     return X
+
+def p99(x):
+    return x.quantile(0.99)
+
+def p75(x):
+    return x.quantile(0.75)

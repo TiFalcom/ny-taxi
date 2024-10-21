@@ -10,8 +10,9 @@ from datetime import datetime
 @click.option('--config_file', default='features', type=str, help='Features configuration file on src/data/config.')
 @click.option('--dataset_name', default=None, type=str, help='Data set name on data/interim.')
 @click.option('--ymd_train', default=None, type=str, help='YYYY-MM-DD from beggining of the training dataset, included')
+@click.option('--ymd_valid', default=None, type=str, help='YYYY-MM-DD from beggining of the valid dataset, included')
 @click.option('--ymd_test', default=None, type=str, help='YYYY-MM-DD from beggining of the testing dataset, included')
-def main(config_file, dataset_name, ymd_train, ymd_test):
+def main(config_file, dataset_name, ymd_train, ymd_valid, ymd_test):
 
     logger = logging.getLogger('Split-Data')
     
@@ -24,8 +25,8 @@ def main(config_file, dataset_name, ymd_train, ymd_test):
     df = pd.read_parquet(os.path.join('data', 'interim', f'{dataset_name}.parquet.gzip'))
     logger.info(f'Shape {dataset_name}: {df.shape}')
 
-    index_valid = df[(df[temporal_feature] >= ymd_train) & (df[temporal_feature] < ymd_test)].sample(frac=0.1, random_state=777).index
-    index_train = df[(df[temporal_feature] >= ymd_train) & (df[temporal_feature] < ymd_test) & (df.index.isin(index_valid) == False)].index
+    index_train = df[(df[temporal_feature] >= ymd_train) & (df[temporal_feature] < ymd_valid)].index
+    index_valid = df[(df[temporal_feature] >= ymd_valid) & (df[temporal_feature] < ymd_test)].index
     index_test = df[(df[temporal_feature] >= ymd_test)].index
 
     logger.info(f'Saving train dataset. Shape: {df.iloc[index_train].shape}')
