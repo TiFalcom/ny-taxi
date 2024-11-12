@@ -85,6 +85,8 @@ class FeatureEngineering():
 
         X_tmp['year_month_day'] = X_tmp['tpep_pickup_datetime'].apply(lambda x:datetime.strftime(x, '%Y%m%d')).astype(int)
 
+        X_tmp['year_month_day_hour'] = X_tmp['tpep_pickup_datetime'].dt.strftime('%Y-%m-%d %H')
+
         new_columns = [col for col in X_tmp.columns if col not in X.columns]
         X_tmp = X.merge(X_tmp[new_columns], left_index=True, right_index=True, how='left')
         
@@ -93,6 +95,70 @@ class FeatureEngineering():
     def transform(self, X):
         return self.create_payload_features(X)
     
+    def fit_transform(self, X, y=None):
+        self.fit(X, y)
+        return self.transform(X)
+    
+class FeatureEngineeringLag():
+    def __init__(self):
+        pass
+
+    def fit(self, X, y=None):
+        return self
+    
+    def create_lag_aux_features(self, X, interval_col, n=3):
+        X = X.reset_index(drop=True)
+        X_tmp = X[[interval_col]].reset_index(drop=True)
+        for i in range(1,n+1):
+            X_tmp[f'{interval_col}_l{i}'] = (pd.to_datetime(X_tmp[interval_col], format='%Y-%m-%d %H') - pd.Timedelta(hours=i)).dt.strftime('%Y-%m-%d %H')
+        
+        new_columns = [col for col in X_tmp.columns if col not in X.columns]
+        X_tmp = X.merge(X_tmp[new_columns], how='left', left_index=True, right_index=True)
+
+        return X_tmp
+    
+    def merge_with_lag(self, X, interval_col, merge_cols, n=3):
+        X = X.reset_index(drop=True)
+        X_tmp = X.reset_index(drop=True)
+
+        for i in range(1,n+1):
+            X_tmp = (
+                X
+                .rename(columns={
+                    col : col + f'_l{i}'
+                    for col in X.columns
+                    if col not in [interval_col] + merge_cols and
+                        sum([col in col_aux for col_aux in [interval_col + f'_l{j}' for j in range(1,n+1)]]) == False
+                })
+                .merge(
+                    X_tmp,
+                    how='right',
+                    right_on=[interval_col]+merge_cols,
+                    left_on=[interval_col + f'_l{i}'] + merge_cols,
+                    suffixes = ('_drop', '')
+                )
+            )
+            X_tmp = X_tmp.drop(columns=[
+                col for col in X_tmp.columns if '_drop' in col
+            ])
+
+        new_columns = [col for col in X_tmp.columns if col not in X.columns]
+        X_tmp = X.merge(X_tmp[new_columns], how='left', left_index=True, right_index=True)
+        return X_tmp
+
+    def transform(self, X):
+        X = X.reset_index(drop=True)
+        X_tmp = X.reset_index(drop=True)
+
+        X_tmp = self.create_lag_aux_features(X_tmp, 'year_month_day_hour', 3)
+
+        X_tmp = self.merge_with_lag(X_tmp, 'year_month_day_hour', ['PULocationID'], 3).fillna(-1)
+
+        new_columns = [col for col in X_tmp.columns if col not in X.columns]
+        X_tmp = X.merge(X_tmp[new_columns], how='left', left_index=True, right_index=True)
+        return X_tmp
+        
+
     def fit_transform(self, X, y=None):
         self.fit(X, y)
         return self.transform(X)

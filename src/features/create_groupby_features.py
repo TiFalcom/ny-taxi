@@ -9,9 +9,13 @@ from src.utils.modeling import p75, p99
 @click.command()
 @click.option('--config_file', default='features', type=str, help='Features configuration file on src/data/config.')
 @click.option('--dataset_prefix', default=None, type=str, help='Data set name on data/raw.')
-def main(config_file, dataset_prefix):
+@click.option('--dataset_output_prefix', default=None, type=str, help='Data set output name data/raw.')
+def main(config_file, dataset_prefix, dataset_output_prefix):
 
     logger = logging.getLogger('Aggregate-Features')
+
+    if not dataset_output_prefix:
+        dataset_output_prefix = dataset_prefix
 
     config_features = yaml.safe_load(open(os.path.join('src', 'data', 'config', f'{config_file}.yml'), 'r'))['aggregate']
     aggregate_col = config_features['temporal_feature']
@@ -38,7 +42,7 @@ def main(config_file, dataset_prefix):
 
         logger.info('Saving dataset on data/aggregated')
         df_agg.to_parquet(
-            os.path.join('data', 'aggregated', f'{dataset_prefix}_{table}.parquet.gzip'),
+            os.path.join('data', 'aggregated', f'{dataset_output_prefix}_{table}.parquet.gzip'),
             compression='gzip',
             index=False
         )

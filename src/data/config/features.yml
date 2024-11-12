@@ -15,7 +15,7 @@ missing_features:
     - service_zone_PU
     - Zone_PU
     - Borough_PU
-  -1:
+  0:
     - passenger_count
     - RatecodeID
   0:
@@ -49,7 +49,9 @@ target:
   - qty_travels
 
 aggregate:
-  temporal_feature : year_month_day
+  temporal_feature : 
+    - year_month_day_hour
+    #- PULocationID
   aggregate_features :
     VendorID : 
       - count

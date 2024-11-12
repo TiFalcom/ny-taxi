@@ -5,27 +5,26 @@ import os
 
 
 @click.command()
-@click.option('--dataset_name_train', default=None, type=str, help='Data set train name on data/interim.')
-@click.option('--dataset_name_test', default=None, type=str, help='Data set test name on data/interim.')
-def main(dataset_name_train, dataset_name_test):
+@click.option('--datasets_list', default=None, multiple=True, help='List of datasets with full path to be concat.')
+@click.option('--dataset_name_output', default=None, type=str, help='Name of the output dataset.')
+def main(datasets_list, dataset_name_output):
 
     logger = logging.getLogger('Data-Concat')
     
-    logger.info(f'Loading {dataset_name_train} dataset.')
-    df = pd.read_parquet(os.path.join('data', 'interim', f'{dataset_name_train}.parquet.gzip'))
-    logger.info(f'Shape {dataset_name_train}: {df.shape}')
+    lst_df = []
+    for dataset in datasets_list:
 
-    logger.info(f'Loading {dataset_name_test} dataset.')
-    df_test = pd.read_parquet(os.path.join('data', 'interim', f'{dataset_name_test}.parquet.gzip'))
-    logger.info(f'Shape {dataset_name_test}: {df_test.shape}')
+        logger.info(f'Loading {dataset}.')
+        lst_df.append(pd.read_parquet(os.path.join(f'{dataset}.parquet.gzip')))
+        logger.info(f'Shape {dataset}: {lst_df[-1].shape}')
 
-    logger.info(f'Merging datasets.')
+    logger.info(f'Concating datasets.')
+    df = pd.concat(lst_df)
+    logger.info(f'Shape {dataset_name_output}: {df.shape}')
 
-    df = pd.concat([df, df_test], ignore_index=True)#.reset_index(drop=True)
-
-    logger.info('Saving dataset on data/interim')
+    logger.info('Saving dataset.')
     df.to_parquet(
-        os.path.join('data', 'interim', f'full.parquet.gzip'),
+        os.path.join(f'{dataset_name_output}.parquet.gzip'),
         compression='gzip',
         index=False
     )

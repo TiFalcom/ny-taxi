@@ -1,5 +1,6 @@
 files_to_persist:
-  - data/raw/train.parquet.gzip
-  - data/raw/test.parquet.gzip
+  - data/raw/train.parquet
+  - data/raw/test.parquet
+  - data/raw/full.parquet.gzip
   - data/external/taxi_zone_lookup.csv
-  - data/external/weather_unify.csv
+  - data/external/weather_data_janfev2024.csv

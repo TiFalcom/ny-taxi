@@ -1,9 +1,6 @@
 # New York City Taxi Trip Prediction
 
-This project aims to create predictive models to estimate the daily number of taxi trips in New York City. Using the public dataset available on [kaggle](https://www.kaggle.com/c/nyc-taxi-trip-duration), various machine learning methods and time series models will be explored to capture patterns and make demand forecasts.
-
-# Credits
-This project is based on [justin-hj-kim's NYC Taxi Trip Data Science Project](https://github.com/justin-hj-kim/NYCtaxi_data_science). I will use, and mention, parts of his code to accelerate development and analysis.
+This project aims to create predictive models to estimate the daily number of taxi trips in New York City. Using the public dataset available on [nyc.gov](https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page), various machine learning methods and time series models will be explored to capture patterns and make demand forecasts.
 
 # Replication
 To replicate the environment, ensure you are using Python 3.12 and run the code above.
@@ -12,22 +9,12 @@ To replicate the environment, ensure you are using Python 3.12 and run the code 
 . install.sh
 ```
 
-# Dataset
-To download the dataset, you need to configure your Kaggle API key in the root directory. Follow the [referenced guide](https://www.kaggle.com/discussions/general/156610) to set it up.
-
-After that run the code, and then unzip the train/test files.
-
-```bash
-kaggle competitions download -c nyc-taxi-trip-duration -p data/raw
-```
-
 # 0.Exogenous Data Capture
 Getting exogenous data that can help prediction.  
 
 Three datasets were used to get exogenous data:  
 - [Weather Data from NYC Central Park](https://www.weather.gov/wrh/Climate?wfo=okx)  
-- [NYC Street Centerline](https://data.cityofnewyork.us/City-Government/NYC-Street-Centerline-CSCL-/exjm-f27b)  
-- [NYC Address Point](https://data.cityofnewyork.us/City-Government/NYC-Address-Points/g6pj-hd8k) - Not used
+- [NYC Taxy Zone](https://data.cityofnewyork.us/City-Government/NYC-Street-Centerline-CSCL-/exjm-f27b)
 
 To treat the data access the code bellow.  
 [00-Exogenous-Data-Capture.ipynb](notebooks/00-Exogenous-Data-Capture.ipynb)
@@ -41,9 +28,15 @@ Cleaning data, removing data points out of NYC bounds [long - (-74.03, -73.75), 
 python src/data/basic_process.py --config_file=features --dataset_name=full
 ```
 
+If you computed train and test splited tables, you can union with the script bellow:
+
+```bash
+python src/data/concat_data.py --dataset_name_train=train --dataset_name_test=test
+```
+
 
 # 2.Split Data
-Split train, test and validation datasets to avoid leak on feature engineering. Using [20240101, 20240131) for training, [20240201, 20240207] for validation, and [20240201, 20160229) for test.
+Split train, test and validation datasets to avoid leak on feature engineering. Using [20240101, 20240131) for training, [20240201, 20240207] for validation, and [20240208, 20240229] for test.
 
 ```bash
 python src/data/split_train_test.py --dataset_name=full --ymd_train=20240101 --ymd_valid=20240201 --ymd_test=20240208
@@ -71,8 +64,7 @@ python src/features/create_encoded_features.py --dataset_prefix=full --encoder_t
 ```
 
 # 5.Aggregate Features
-Condense analytical features to daily features.  
-
+Condense analytical features to hour features.  
 
 ```bash
 python src/features/create_groupby_features.py --dataset_prefix=full
@@ -88,6 +80,13 @@ python src/features/create_scalers.py --dataset_prefix=full
 And to scale dataset and save a checkpoint, run this:  
 ```bash
 python src/features/create_scaled_features.py --dataset_prefix=full
+```
+
+# 7.Feature Enginnering - Lag
+Create Lag Features
+
+```bash
+python src/features/create_lag_features.py --dataset_prefix=full
 ```
 
 # 6.Feature Selection (?)
