@@ -31,9 +31,8 @@ python src/data/basic_process.py --config_file=features --dataset_name=full
 If you computed train and test splited tables, you can union with the script bellow:
 
 ```bash
-python src/data/concat_data.py --dataset_name_train=train --dataset_name_test=test
+python src/data/concat_data.py --datasets_list=data/interim/train --datasets_list=data/interim/test --dataset_name_output=data/interim/full
 ```
-
 
 # 2.Split Data
 Split train, test and validation datasets to avoid leak on feature engineering. Using [20240101, 20240131) for training, [20240201, 20240207] for validation, and [20240208, 20240229] for test.

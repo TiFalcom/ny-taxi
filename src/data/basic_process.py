@@ -5,6 +5,7 @@ import click
 import os
 import yaml
 from datetime import datetime
+import sys
 
 from src.utils.transformers import FixFeaturesType, FixFeaturesMissing
 

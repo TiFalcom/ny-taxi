@@ -51,7 +51,7 @@ target:
 aggregate:
   temporal_feature : 
     - year_month_day_hour
-    #- PULocationID
+    - PULocationID
   aggregate_features :
     VendorID : 
       - count

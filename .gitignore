@@ -6,6 +6,7 @@
 *.parquet
 
 /venv_ny_taxi/
+/venv_ny_taxi_/
 
 # Mac OS-specific storage files
 .DS_Store
