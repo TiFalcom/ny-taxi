@@ -66,7 +66,7 @@ python src/features/create_encoded_features.py --dataset_prefix=full --encoder_t
 Condense analytical features to hour features. And fix target with lag 1
 
 Features we decided to condense for this experiment was:  
-- Minimun and Maximun Temperature - Max  
+- Minimum and Maximum Temperature - Max  
 - Qty. Passengers - Count  
 - Day of Week - Count  
 - Period of Day - Count  
@@ -99,7 +99,7 @@ Create Lag Features for tabular models, created lag 3 for:
 python src/features/create_lag_features.py --dataset_prefix=full
 ```
 
-# 6.Feature Selection
+# 8.Feature Selection
 A manually feature selection were done, to acelerate the process, on future works we can implement a robust method.
 
 Features selected for Decision Tree and Boosting:  
@@ -109,8 +109,8 @@ Features selected for Decision Tree and Boosting:
 Trends selected for ARIMA and SARIMAX:  
 ['qty_travels']  
 
-# 7.Tunning
-There were no tunning implemented yet, on future works we can implement some methods.  
+# 9.Tunning
+There was no tunning implemented yet, on future works we can implement some method.  
 
 Params for Decision Tree:  
 {random_state : 777, max_depth : 40, min_samples_leaf : 15}  
@@ -125,7 +125,7 @@ Params for SARIMAX:
 {order : [3, 1, 3], freq : h, seasonal_order : [3, 1, 3, 5]}
 
 
-# 8.Train Model
+# 10.Train Model
 On this experiment we decided to work with only two locations (163, 79), because ARIMA/SARIMAX are expensive to fit, after building the entire pipeline we will work with more locations.  
 
 For training the Boosting model run the code bellow:
@@ -154,11 +154,11 @@ WIP:
 - Basic MLP  
 - LSTM  
 
-# 9.Register Experiment (mlflow?)
+# 11.Register Experiment (mlflow?)
 Use a framework to register experiments (maybe a folder structure)
 
-# 10.Results
-Compare results between techniques
+# 12.Results
+You can find results on [12-Results.ipynb](notebooks/12-Results.ipynb)
 
 
 ## Project Organization
