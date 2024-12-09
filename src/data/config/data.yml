@@ -4,3 +4,4 @@ files_to_persist:
   - data/raw/full.parquet.gzip
   - data/external/taxi_zone_lookup.csv
   - data/external/weather_data_janfev2024.csv
+  - data/external/weather_unify.parquet.gzip
